@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Captura de Mídia</title>
+    <style>
+        video, canvas {
+            width: 100%;
+            max-width: 400px;
+        }
+    </style>
+    <script src="https://apis.google.com/js/api.js"></script>
+    <script src="script.js"></script>
+</head>
+<body onload="handleClientLoad()">
+    <h1>Capture uma Foto ou Vídeo</h1>
+    <video id="video" autoplay></video>
+    <button id="snap">Tirar Foto</button>
+    <canvas id="canvas" style="display:none;"></canvas>
+    <h2>Foto Capturada:</h2>
+    <img id="photo" alt="Sua foto aparecerá aqui">
+    <br>
+    <button id="startRecording">Gravar Vídeo</button>
+    <button id="stopRecording" disabled>Parar Gravação</button>
+    <video id="recordedVideo" controls style="display:none;"></video>
+    <button id="uploadButton" style="display:none;">Enviar para Google Drive</button>
+
+</body>
+</html>

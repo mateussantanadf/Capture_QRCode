@@ -3,28 +3,54 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Captura de Mídia</title>
-    <style>
-        video, canvas {
-            width: 100%;
-            max-width: 400px;
-        }
-    </style>
-    <script src="https://apis.google.com/js/api.js"></script>
-    <script src="script.js"></script>
+    <title>Captura de Foto</title>
 </head>
-<body onload="handleClientLoad()">
-    <h1>Capture uma Foto ou Vídeo</h1>
-    <video id="video" autoplay></video>
-    <button id="snap">Tirar Foto</button>
-    <canvas id="canvas" style="display:none;"></canvas>
-    <h2>Foto Capturada:</h2>
-    <img id="photo" alt="Sua foto aparecerá aqui">
-    <br>
-    <button id="startRecording">Gravar Vídeo</button>
-    <button id="stopRecording" disabled>Parar Gravação</button>
-    <video id="recordedVideo" controls style="display:none;"></video>
-    <button id="uploadButton" style="display:none;">Enviar para Google Drive</button>
+<body>
+    <h1>Captura de Foto</h1>
+    <input type="file" accept="image/*" capture="camera" id="cameraInput">
+    <button id="uploadButton">Enviar para Google Drive</button>
+    
+    <script src="https://apis.google.com/js/api.js"></script>
+    <script>
+        document.getElementById('uploadButton').onclick = function() {
+            const fileInput = document.getElementById('cameraInput');
+            const file = fileInput.files[0];
+            if (!file) {
+                alert("Por favor, tire uma foto primeiro.");
+                return;
+            }
+            uploadToDrive(file);
+        };
 
+        function uploadToDrive(file) {
+            // Autenticação e configuração da API do Google Drive
+            gapi.load('client:auth2', function() {
+                gapi.auth2.init({
+                    client_id: '294110654965-5kf1vog63kktsmhd607i87f3i7tbv113.apps.googleusercontent.com',
+                    scope: 'https://www.googleapis.com/auth/drive.file'
+                }).then(function () {
+                    gapi.auth2.getAuthInstance().signIn().then(function() {
+                        const metadata = {
+                            'name': file.name,
+                            'mimeType': file.type
+                        };
+                        const form = new FormData();
+                        form.append('metadata', new Blob([JSON.stringify(metadata)], { type: 'application/json' }));
+                        form.append('file', file);
+
+                        const xhr = new XMLHttpRequest();
+                        xhr.open('POST', 'https://www.googleapis.com/upload/drive/v3/files?uploadType=multipart');
+                        xhr.setRequestHeader('Authorization', 'Bearer ' + gapi.auth.getToken().access_token);
+                        xhr.responseType = 'json';
+                        xhr.onload = function() {
+                            console.log(xhr.response);
+                            alert('Arquivo enviado com sucesso!');
+                        };
+                        xhr.send(form);
+                    });
+                });
+            });
+        }
+    </script>
 </body>
 </html>
