@@ -20,7 +20,7 @@ app.post('/upload', upload.single('file'), async (req, res) => {
     
     try {
         const auth = new google.auth.GoogleAuth({
-            keyFile: './qrcode-440713-e63a543ff2ec.json',
+            keyFile: './qrcode-440713-989b04d42608.json',
             scopes: ['https://www.googleapis.com/auth/drive']
         });
 
