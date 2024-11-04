@@ -12,6 +12,11 @@ const GOOGLE_API_FOLDER_ID = '1eLLtsuoRs9y76QWnVjH1wfMbv8tDlvZ1';
 // Configuração do multer para upload de arquivos
 const upload = multer({ dest: 'uploads/' });
 
+const { GoogleAuth } = require('google-auth-library');
+
+// Recuperar as credenciais do ambiente
+const credentials = JSON.parse(process.env.GOOGLE_CREDENTIALS);
+
 app.use(express.static('public'));
 
 // Endpoint para upload de arquivos
@@ -19,8 +24,8 @@ app.post('/upload', upload.single('file'), async (req, res) => {
     const filePath = path.join(__dirname, req.file.path);
     
     try {
-        const auth = new google.auth.GoogleAuth({
-            keyFile: './qrcode-440713-989b04d42608.json',
+        const auth = new GoogleAuth({
+            credentials: credentials,
             scopes: ['https://www.googleapis.com/auth/drive']
         });
 
