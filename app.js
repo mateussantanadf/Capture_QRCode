@@ -6,7 +6,7 @@ const multer = require('multer');
 const path = require('path');
 
 const app = express();
-const PORT = 3000;
+const PORT = process.env.PORT || 3000;
 
 const GOOGLE_API_FOLDER_ID = process.env.GOOGLE_API_FOLDER_ID;
 
