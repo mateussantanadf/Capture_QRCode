@@ -1,0 +1,27 @@
+# Ignorar arquivos de variáveis de ambiente
+.env
+.env.local
+.env.*.local
+
+# Chaves secretas e credenciais
+*.secret
+*.key
+*.pem
+
+# Ignorar arquivos de cache e logs
+*.log
+*.tmp
+.DS_Store
+Thumbs.db
+
+# Pastas de dependências de projetos Node.js, Python, etc.
+node_modules/
+__pycache__/
+
+# Configurações de IDEs
+.vscode/
+.idea/
+
+# Outros arquivos de build ou distribuição
+/dist
+/build
