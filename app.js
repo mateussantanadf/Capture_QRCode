@@ -1,3 +1,4 @@
+require('dotenv').config();
 const express = require('express');
 const fs = require('fs');
 const { google } = require('googleapis');
@@ -7,7 +8,7 @@ const path = require('path');
 const app = express();
 const PORT = 3000;
 
-const GOOGLE_API_FOLDER_ID = '1eLLtsuoRs9y76QWnVjH1wfMbv8tDlvZ1';
+const GOOGLE_API_FOLDER_ID = process.env.GOOGLE_API_FOLDER_ID;
 
 // Configuração do multer para upload de arquivos
 const upload = multer({ dest: 'uploads/' });
