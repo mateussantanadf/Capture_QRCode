@@ -4,10 +4,11 @@ const fs = require('fs');
 const { google } = require('googleapis');
 const multer = require('multer');
 const path = require('path');
+const AWS = require('aws-sdk');
 const { GoogleAuth } = require('google-auth-library');
 
 const app = express();
-const PORT = process.env.PORT; /* || 3000; */
+const PORT = process.env.PORT || 3000; // Defina sua porta
 
 const GOOGLE_API_FOLDER_ID = process.env.GOOGLE_API_FOLDER_ID;
 
@@ -15,7 +16,30 @@ const GOOGLE_API_FOLDER_ID = process.env.GOOGLE_API_FOLDER_ID;
 const upload = multer({ dest: 'uploads/' });
 
 // Recuperar as credenciais do ambiente
-const credentials = JSON.parse(process.env.GOOGLE_CREDENTIALS);
+//const credentials = JSON.parse(process.env.GOOGLE_CREDENTIALS);
+
+// Função para obter as credenciais do Google Drive armazenadas no Secrets Manager
+async function getGoogleDriveCredentials() {
+    const secretName = 'google-drive-credentials'; // Nome do segredo no Secrets Manager
+    const region = 'us-east-1'; // Região onde o segredo foi armazenado
+
+    const client = new AWS.SecretsManager({
+        region: region
+    });
+
+    try {
+        const data = await client.getSecretValue({ SecretId: secretName }).promise();
+        if (data.SecretString) {
+            // As credenciais são retornadas em formato JSON
+            return JSON.parse(data.SecretString);
+        } else {
+            throw new Error('A resposta do segredo não contém o SecretString.');
+        }
+    } catch (err) {
+        console.log('Erro ao acessar o segredo do Secrets Manager:', err);
+        throw err;
+    }
+}
 
 app.use(express.static('public'));
 
@@ -56,6 +80,9 @@ app.post('/upload', upload.single('file'), async (req, res) => {
     const filePath = path.join(__dirname, req.file.path);
 
     try {
+        // Obter as credenciais do Google Drive a partir do Secrets Manager
+        const credentials = await getGoogleDriveCredentials();
+
         const auth = new GoogleAuth({
             credentials: credentials,
             scopes: ['https://www.googleapis.com/auth/drive']
