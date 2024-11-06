@@ -7,7 +7,7 @@ const path = require('path');
 const { GoogleAuth } = require('google-auth-library');
 
 const app = express();
-const PORT = process.env.PORT; /* || 3000; */
+const PORT = process.env.PORT || 3000;
 
 const GOOGLE_API_FOLDER_ID = process.env.GOOGLE_API_FOLDER_ID;
 
