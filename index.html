@@ -3,88 +3,183 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Upload de Arquivo</title>
+    <title>Carlos e Tainara</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <style>
-        body {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            height: 100vh;
-            margin: 0;
+         body {
             font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
             background-color: #f4f4f4;
+            overflow: hidden;
         }
 
-        h1 {
-            margin-bottom: 20px;
+        /* Estilo da div com a imagem de fundo */
+        .background-container {
+            width: 50%;
+            height: 100%;
+            background-image: url('foto.jpeg'); /* Substitua pela URL da sua imagem */
+            background-size: cover; /* A imagem vai cobrir toda a tela */
+            background-position: center center; /* A imagem vai ser centralizada */
+            background-repeat: no-repeat; /* Impede a repetição da imagem */
+            position: relative;
         }
 
-        .container {
-            text-align: center;
-            background-color: white;
+        /* Estilo da div dos botões */
+        .button-container {
+            position: absolute;
+            bottom: 0;
+            left: 50%;
+            transform: translateX(-50%); /* Centraliza a div dos botões horizontalmente */
+            width: 90%; /* Ajusta o tamanho dos botões para não ultrapassar as bordas */
             padding: 20px;
-            border-radius: 8px;
-            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+            display: flex;
+            justify-content: center;
+            gap: 20px;
         }
 
-        img {
-            max-width: 200px;
-            margin-bottom: 20px;
-        }
-
-        input[type="file"] {
-            margin-bottom: 20px;
-        }
-
-        button {
-            background-color: #007bff;
+        /* Estilo dos botões */
+        .button-container button {
+            background-color: #3498db;
             color: white;
             border: none;
             padding: 10px 20px;
             border-radius: 5px;
             cursor: pointer;
             font-size: 16px;
-            margin: 0 10px;
-            display: flex;
-            align-items: center;
+            transition: background-color 0.3s ease;
+            flex: 1;
+            max-width: 120px;
+            margin-bottom: 20%;
         }
 
-        button:hover {
-            background-color: #0056b3;
+        /* Efeito de hover nos botões */
+        .button-container button:hover {
+            background-color: #2980b9;
         }
 
-        i {
-            margin-right: 8px;
+        /* Media queries para responsividade */
+        @media (max-width: 1024px) {
+            .button-container {
+                width: 95%; /* Ajusta para telas menores */
+                padding: 15px;
+            }
+
+            .button-container button {
+                font-size: 14px;
+                max-width: 100px;
+            }
+        }
+
+        @media (max-width: 600px) {
+            .button-container {
+                flex-direction: column;
+                gap: 10px;
+            }
+
+            .button-container button {
+                font-size: 14px;
+                max-width: 100%;
+            }
+        }
+
+        /* Estilo do vídeo */
+        #video {
+            width: 100%;
+            height: auto;
+            display: none;
         }
     </style>
 </head>
 <body>
 
-    <div class="container">
-        <img src="costs_logo.png" alt="Imagem de Boas-Vindas" />
-        <h1>Bem-vindo ao Sistema de Upload</h1>
-        
-        <input type="file" id="fileInput" />
-        <div>
-            <button id="uploadButton">
-                <i class="fas fa-upload"></i> Upload
+    <div class="background-container">
+        <div class="button-container">
+            <button id="cameraButton">
+                <i class="fas fa-camera"></i> Tirar Foto
+                <input type="file" id="fileInput" accept="image/*" capture="camera" style="display:none" />
             </button>
-            <button id="sendButton">
-                <i class="fas fa-paper-plane"></i> Enviar
+            <button id="videoButton">
+                <i class="fas fa-video"></i> Gravar Vídeo
             </button>
         </div>
+        <video id="video" autoplay></video>
         <p id="responseMessage"></p>
     </div>
 
     <script>
-        document.getElementById('uploadButton').onclick = async () => {
-            const fileInput = document.getElementById('fileInput');
-            const file = fileInput.files[0];
+        // Variáveis de controle
+        let mediaRecorder;
+        let recordedChunks = [];
+        let stream;
+        const videoElement = document.getElementById('video');
+        const videoButton = document.getElementById('videoButton');
+        const cameraButton = document.getElementById('cameraButton');
+        const fileInput = document.getElementById('fileInput');
+        const sendButton = document.getElementById('sendButton');
+        
+        // Função para iniciar/terminar gravação de vídeo
+        videoButton.onclick = async () => {
+            if (mediaRecorder && mediaRecorder.state === 'recording') {
+                // Parar gravação se já estiver gravando
+                mediaRecorder.stop();
+                videoButton.innerHTML = '<i class="fas fa-video"></i> Gravar Vídeo';
+            } else {
+                try {
+                    // Solicitar permissão para acessar a câmera
+                    stream = await navigator.mediaDevices.getUserMedia({ video: true });
 
+                    // Exibir a transmissão da câmera no elemento <video>
+                    videoElement.srcObject = stream;
+                    videoElement.style.display = 'block';
+
+                    // Criar o MediaRecorder
+                    mediaRecorder = new MediaRecorder(stream);
+
+                    // Armazenar os dados gravados
+                    mediaRecorder.ondataavailable = event => {
+                        recordedChunks.push(event.data);
+                    };
+
+                    // Quando a gravação for parada, disponibiliza o botão de enviar
+                    mediaRecorder.onstop = () => {
+                        const blob = new Blob(recordedChunks, { type: 'video/webm' });
+                        const videoUrl = URL.createObjectURL(blob);
+
+                        // Exibir o vídeo gravado
+                        videoElement.srcObject = null;
+                        videoElement.src = videoUrl;
+                        videoElement.controls = true;
+                        videoElement.style.display = 'block';
+
+                        // Aqui você pode adicionar um botão ou lógica para enviar o vídeo ao servidor
+                        // Enviar vídeo (usando fetch)
+                        // uploadVideo(blob);
+                    };
+
+                    // Iniciar a gravação
+                    mediaRecorder.start();
+                    videoButton.innerHTML = '<i class="fas fa-stop"></i> Parar Gravação';
+                } catch (error) {
+                    console.error('Erro ao acessar a câmera para vídeo:', error);
+                    alert('Erro ao acessar a câmera.');
+                }
+            }
+        };
+
+        // Função para abrir a câmera e tirar uma foto
+        cameraButton.onclick = () => {
+            fileInput.click();
+        };
+
+        fileInput.onchange = async (event) => {
+            const file = event.target.files[0];
             if (!file) {
-                alert('Por favor, selecione um arquivo para enviar.');
+                alert('Por favor, tire uma foto.');
                 return;
             }
 
@@ -105,9 +200,25 @@
             }
         };
 
-        document.getElementById('sendButton').onclick = () => {
-            alert('Função de envio ainda não implementada!');
+        // Função de envio de vídeo para o servidor (opcional)
+        const uploadVideo = async (blob) => {
+            const formData = new FormData();
+            formData.append('video', blob, 'video.webm');
+
+            try {
+                const response = await fetch('/upload', {
+                    method: 'POST',
+                    body: formData
+                });
+
+                const result = await response.text();
+                document.getElementById('responseMessage').innerText = result;
+            } catch (error) {
+                console.error('Erro ao enviar o vídeo:', error);
+                document.getElementById('responseMessage').innerText = 'Erro ao enviar o vídeo.';
+            }
         };
+
     </script>
 
 </body>
