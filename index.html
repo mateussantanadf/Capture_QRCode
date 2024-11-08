@@ -6,7 +6,7 @@
     <title>Carlos e Tainara</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <style>
-         body {
+        body {
             font-family: Arial, sans-serif;
             margin: 0;
             padding: 0;
@@ -31,6 +31,7 @@
             flex-direction: column;
             justify-content: center; /* Centraliza o conteúdo verticalmente */
             align-items: center; /* Centraliza o conteúdo horizontalmente */
+            background-image: url("foto.jpeg");
         }
 
         /* Estilo do texto de boas-vindas */
@@ -45,20 +46,6 @@
             border-radius: 10px;
             position: absolute;
             top: 10%; /* Ajuste para deixar o texto um pouco mais para baixo */
-        }
-
-        /* Estilo da div da imagem */
-        .image-container {
-            text-align: center;
-            margin: 20px 0;
-        }
-
-        /* Estilo da imagem */
-        .image-container img {
-            max-width: 50%; /* Limita a largura da imagem */
-            height: auto; /* Mantém a proporção da imagem */
-            border-radius: 10px;
-            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2); /* Adiciona uma leve sombra */
         }
 
         /* Estilo da div dos botões */
@@ -152,23 +139,21 @@
             Bem-vindo! Deixe uma lembrança da festa para os noivos.
         </div>
 
-        <!-- Div para a imagem -->
-        <div class="image-container">
-            <img src="foto.jpeg" alt="Imagem de Lembrança">
-        </div>
-
         <div class="button-container">
+            <!-- Botão para Tirar Foto -->
             <button id="cameraButton">
                 <i class="fas fa-camera"></i> Tirar Foto
-                <input type="file" id="fileInput" accept="image/*" capture="camera" style="display:none" />
+                <input type="file" id="fileInputImage" accept="image/*" capture="camera" style="display:none" />
             </button>
+
+            <!-- Botão para Gravar Vídeo -->
             <button id="videoButton">
                 <i class="fas fa-video"></i> Gravar Vídeo
+                <input type="file" id="fileInputVideo" accept="video/*" capture="camera" style="display:none" />
             </button>
         </div>
 
         <video id="video" autoplay></video>
-        <p id="responseMessage"></p>
 
         <!-- Spinner de carregamento -->
         <div id="loading" class="loading">
@@ -182,88 +167,27 @@
     </div>
 
     <script>
-        // Variáveis de controle
-        let mediaRecorder;
-        let recordedChunks = [];
-        let stream;
-        const videoElement = document.getElementById('video');
-        const videoButton = document.getElementById('videoButton');
-        const cameraButton = document.getElementById('cameraButton');
-        const fileInput = document.getElementById('fileInput');
+        // Função para mostrar o loading e enviar o arquivo
         const loadingIndicator = document.getElementById('loading');
         const successMessage = document.getElementById('successMessage');
-        
-        // Função para iniciar/terminar gravação de vídeo
-        videoButton.onclick = async () => {
-            if (mediaRecorder && mediaRecorder.state === 'recording') {
-                // Parar gravação se já estiver gravando
-                mediaRecorder.stop();
-                videoButton.innerHTML = '<i class="fas fa-video"></i> Gravar Vídeo';
-            } else {
-                try {
-                    // Solicitar permissão para acessar a câmera
-                    stream = await navigator.mediaDevices.getUserMedia({ video: true });
 
-                    // Exibir a transmissão da câmera no elemento <video>
-                    videoElement.srcObject = stream;
-                    videoElement.style.display = 'block';
-
-                    // Criar o MediaRecorder
-                    mediaRecorder = new MediaRecorder(stream);
-
-                    // Armazenar os dados gravados
-                    mediaRecorder.ondataavailable = event => {
-                        recordedChunks.push(event.data);
-                    };
-
-                    // Quando a gravação for parada, disponibiliza o vídeo gravado
-                    mediaRecorder.onstop = () => {
-                        const blob = new Blob(recordedChunks, { type: 'video/webm' });
-                        const videoUrl = URL.createObjectURL(blob);
-
-                        // Exibir o vídeo gravado
-                        videoElement.srcObject = null;
-                        videoElement.src = videoUrl;
-                        videoElement.controls = true;
-                        videoElement.style.display = 'block';
-                    };
-
-                    // Iniciar a gravação
-                    mediaRecorder.start();
-                    videoButton.innerHTML = '<i class="fas fa-stop"></i> Parar Gravação';
-                } catch (error) {
-                    console.error('Erro ao acessar a câmera para vídeo:', error);
-                    alert('Erro ao acessar a câmera.');
-                }
-            }
-        };
-
-        // Função para abrir a câmera e tirar uma foto
-        cameraButton.onclick = () => {
-            fileInput.click();
-        };
-
-        // Função para mostrar o loading e enviar o arquivo
         const showLoading = () => {
             loadingIndicator.style.display = 'block';
-            videoButton.disabled = true; // Desabilitar o botão de vídeo enquanto o envio está em progresso
-            cameraButton.disabled = true; // Desabilitar o botão de foto enquanto o envio está em progresso
         };
 
         const hideLoading = () => {
             loadingIndicator.style.display = 'none';
-            videoButton.disabled = false; // Reabilitar o botão de vídeo
-            cameraButton.disabled = false; // Reabilitar o botão de foto
         };
 
         const showSuccessMessage = () => {
             successMessage.style.display = 'block';
             setTimeout(() => {
-                successMessage.style.display = 'none'; // Esconde a mensagem após 3 segundos
+                successMessage.style.display = 'none';
             }, 3000);
         };
 
-        fileInput.onchange = async (event) => {
+        // Lidar com o evento de foto
+        document.getElementById('fileInputImage').onchange = async (event) => {
             const file = event.target.files[0];
             if (!file) {
                 alert('Por favor, tire uma foto.');
@@ -274,7 +198,7 @@
             formData.append('file', file);
 
             try {
-                showLoading(); // Mostrar o indicador de carregamento
+                showLoading();
 
                 const response = await fetch('/upload', {
                     method: 'POST',
@@ -282,16 +206,58 @@
                 });
 
                 const result = await response.text();
-                document.getElementById('responseMessage').innerText = result;
+                console.log(result); // Aqui você pode lidar com a resposta
 
-                hideLoading(); // Esconder o indicador de carregamento
-                showSuccessMessage(); // Mostrar a mensagem de sucesso
+                hideLoading();
+                showSuccessMessage();
 
             } catch (error) {
                 console.error('Erro ao enviar o arquivo:', error);
-                document.getElementById('responseMessage').innerText = 'Erro ao enviar o arquivo.';
-                hideLoading(); // Esconder o indicador de carregamento
+                alert('Erro ao enviar a foto.');
+                hideLoading();
             }
+        };
+
+        // Lidar com o evento de vídeo
+        document.getElementById('fileInputVideo').onchange = async (event) => {
+            const file = event.target.files[0];
+            if (!file) {
+                alert('Por favor, grave um vídeo.');
+                return;
+            }
+
+            const formData = new FormData();
+            formData.append('file', file);
+
+            try {
+                showLoading();
+
+                const response = await fetch('/upload', {
+                    method: 'POST',
+                    body: formData
+                });
+
+                const result = await response.text();
+                console.log(result); // Aqui você pode lidar com a resposta
+
+                hideLoading();
+                showSuccessMessage();
+
+            } catch (error) {
+                console.error('Erro ao enviar o arquivo:', error);
+                alert('Erro ao enviar o vídeo.');
+                hideLoading();
+            }
+        };
+
+        // Função para abrir a câmera e tirar uma foto
+        document.getElementById('cameraButton').onclick = () => {
+            document.getElementById('fileInputImage').click();
+        };
+
+        // Função para abrir a câmera e gravar um vídeo
+        document.getElementById('videoButton').onclick = () => {
+            document.getElementById('fileInputVideo').click();
         };
     </script>
 
