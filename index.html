@@ -43,7 +43,19 @@
             background-color: rgba(0, 0, 0, 0.5); /* Fundo semi-transparente */
             margin: 20px 0;
             border-radius: 10px;
-            margin-top: 35%;
+        }
+
+        /* Estilo da div para a imagem */
+        .image-container {
+            text-align: center;
+            margin: 20px 0;
+        }
+
+        .image-container img {
+            max-width: 100%; /* A imagem ocupa a largura máxima disponível */
+            height: auto; /* Mantém a proporção da imagem */
+            border-radius: 10px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2); /* Adiciona uma leve sombra */
         }
 
         /* Estilo da div dos botões */
@@ -57,7 +69,6 @@
             display: flex;
             justify-content: center;
             gap: 20px;
-            margin-bottom: 40%;
         }
 
         /* Estilo dos botões */
@@ -72,7 +83,7 @@
             transition: background-color 0.3s ease;
             flex: 1;
             max-width: 120px;
-            
+            margin-bottom: 20%;
         }
 
         /* Efeito de hover nos botões */
@@ -136,6 +147,11 @@
         <!-- Texto de boas-vindas -->
         <div class="welcome-text">
             Bem-vindo! Deixe uma lembrança da festa para os noivos.
+        </div>
+
+        <!-- Div para a imagem -->
+        <div class="image-container">
+            <img src="foto.jpeg" alt="Imagem de Lembrança">
         </div>
 
         <div class="button-container">
@@ -254,10 +270,9 @@
             const formData = new FormData();
             formData.append('file', file);
 
-            // Exibe o indicador de loading
-            showLoading();
-
             try {
+                showLoading(); // Mostrar o indicador de carregamento
+
                 const response = await fetch('/upload', {
                     method: 'POST',
                     body: formData
@@ -266,17 +281,15 @@
                 const result = await response.text();
                 document.getElementById('responseMessage').innerText = result;
 
-                // Esconde o loading e exibe a mensagem de sucesso
-                hideLoading();
-                showSuccessMessage();
+                hideLoading(); // Esconder o indicador de carregamento
+                showSuccessMessage(); // Mostrar a mensagem de sucesso
 
             } catch (error) {
                 console.error('Erro ao enviar o arquivo:', error);
                 document.getElementById('responseMessage').innerText = 'Erro ao enviar o arquivo.';
-                hideLoading();
+                hideLoading(); // Esconder o indicador de carregamento
             }
         };
-
     </script>
 
 </body>
