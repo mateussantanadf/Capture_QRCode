@@ -23,14 +23,14 @@
         .background-container {
             width: 50%;
             height: 100%;
-            background-image: url('./foto.jpeg'); /* Substitua pela URL da sua imagem */
             background-size: cover; /* A imagem vai cobrir toda a tela */
             background-position: center center; /* A imagem vai ser centralizada */
             background-repeat: no-repeat; /* Impede a repetição da imagem */
             position: relative;
             display: flex;
             flex-direction: column;
-            justify-content: space-between;
+            justify-content: center; /* Centraliza o conteúdo verticalmente */
+            align-items: center; /* Centraliza o conteúdo horizontalmente */
         }
 
         /* Estilo do texto de boas-vindas */
@@ -43,16 +43,19 @@
             background-color: rgba(0, 0, 0, 0.5); /* Fundo semi-transparente */
             margin: 20px 0;
             border-radius: 10px;
+            position: absolute;
+            top: 10%; /* Ajuste para deixar o texto um pouco mais para baixo */
         }
 
-        /* Estilo da div para a imagem */
+        /* Estilo da div da imagem */
         .image-container {
             text-align: center;
             margin: 20px 0;
         }
 
+        /* Estilo da imagem */
         .image-container img {
-            max-width: 100%; /* A imagem ocupa a largura máxima disponível */
+            max-width: 50%; /* Limita a largura da imagem */
             height: auto; /* Mantém a proporção da imagem */
             border-radius: 10px;
             box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2); /* Adiciona uma leve sombra */
@@ -61,7 +64,7 @@
         /* Estilo da div dos botões */
         .button-container {
             position: absolute;
-            bottom: 0;
+            bottom: 10%;
             left: 50%;
             transform: translateX(-50%); /* Centraliza a div dos botões horizontalmente */
             width: 90%; /* Ajusta o tamanho dos botões para não ultrapassar as bordas */
@@ -151,7 +154,7 @@
 
         <!-- Div para a imagem -->
         <div class="image-container">
-            <img src="foto.jpeg" alt="Imagem de Lembrança">
+            <img src="https://via.placeholder.com/400x300" alt="Imagem de Lembrança">
         </div>
 
         <div class="button-container">
