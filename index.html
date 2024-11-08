@@ -19,49 +19,45 @@
             flex-direction: column;
         }
 
-        /* Estilo da div com a imagem de fundo */
         .background-container {
             width: 100%;
             height: 100%;
-            background-size: cover; /* A imagem vai cobrir toda a tela */
-            background-position: center center; /* A imagem vai ser centralizada */
-            background-repeat: no-repeat; /* Impede a repetição da imagem */
+            background-size: cover;
+            background-position: center center;
+            background-repeat: no-repeat;
             position: relative;
             display: flex;
             flex-direction: column;
-            justify-content: center; /* Centraliza o conteúdo verticalmente */
-            align-items: center; /* Centraliza o conteúdo horizontalmente */
-            background-image: url("https://minhas-fotos-qrcode.s3.sa-east-1.amazonaws.com/foto.jpeg?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Content-Sha256=UNSIGNED-PAYLOAD&X-Amz-Credential=ASIAYUQGSN6B57SJNEOW%2F20241108%2Fsa-east-1%2Fs3%2Faws4_request&X-Amz-Date=20241108T181328Z&X-Amz-Expires=300&X-Amz-Security-Token=IQoJb3JpZ2luX2VjENr%2F%2F%2F%2F%2F%2F%2F%2F%2F%2FwEaCXNhLWVhc3QtMSJHMEUCIQCFQUQv0JDUV7jNQDBz%2BVXspRvO7v%2FNJSTW3q%2Frb%2FrVaAIgOx93tNHM1iiZ9A56mipUrMBRCAu5LnUndIy9tIxGTJEq6AIIYxAAGgw1OTM3OTMwMTk3NzkiDLH4abp%2FUYKoTcOgrCrFAiQIaJ9YwGIrf55XNMOHeqxlwHha%2FONIPyS3N3jRc1HbnUmCi%2BjGNOOoaRgOGs12dwnDpbqY05h2ZA1rr30kJl%2F8BMc%2Fa%2B9Nuqc%2BzAddd6pbkOPXeIwnfRr%2B0ziRaAzQrz%2FgoZ0aWyunOT7qAoGTquEKJbgX6IUoYOPwkuBbiwqlgL1m5dpojk%2BWwqF5zbZaPTPTrWONW4whLAbtuxZA4S4c05T2lCjh2qOgeR%2B%2F3vn8kBUZip4B0k2%2BLtfiLVZDKh0vRCAhL7cf4F%2BOCXflchiLhWgMj2yp5Q4vgb11wERh2Lxjko7%2FfgGc%2F5bt9p%2FWvs3VDbOlu9AhEjsZF5L%2B%2Fv%2FL2DJYcymNtKWYHwOFcOpoQYvbtRXi7M%2BaOygkFc7Y7EPzu3uJOrO%2BcVgcQV64KCrzJGkG2UX%2Fo3ilRiSRKFDobkR1Gx8wjaa5uQY6swIw4vq1vf%2B%2ByGlT%2Fbi3npf7ht%2BhDk%2FxC4hgJqWODwLVRCd7ynPNZSvqg0xLLXQNAG%2BWlKHIlzDCWY8dAuO2wEreguh04GnmZrFgG%2BeH%2BJVk9wSKzd5OiYlTxj1Temq3bMb5tjblNp43vXpQXy0iG87sgxYR374D0kUVqVzX8xe8VEhUcBiPYLhaRYOe0fNadY%2BqYRLkkpIlZGpEflwyQVOU7uUnn7rLqm4Y%2BAE61Q%2F%2B%2BZq2R52H%2B1LPSOLB6TLqopP5YD78VmCInxx5X0dKVjKmKQrEOJjnJbazAEFU8ca47QxSOOKjpXCTTxVLTieKBYU6Ngy%2F2%2FUgmYGArwpXP6DSRx3HgvGb2ksSSDYkRqXtAsorNVygmm7nGC6rfotLLTsOkTD4Em%2FKznXU%2Flhbn3%2BJiVGp&X-Amz-Signature=a6f932e1c5b05453e66dcefd73539eb9d845ec4c9ddfc81fd06d08cb57fa554d&X-Amz-SignedHeaders=host&response-content-disposition=inline");
+            justify-content: center;
+            align-items: center;
+            background-image: url("https://minhas-fotos-qrcode.s3.sa-east-1.amazonaws.com/foto.jpeg");
         }
 
-        /* Estilo do texto de boas-vindas */
         .welcome-text {
             text-align: center;
             font-size: 24px;
             color: #fff;
             font-weight: bold;
             padding: 20px;
-            background-color: rgba(0, 0, 0, 0.5); /* Fundo semi-transparente */
+            background-color: rgba(0, 0, 0, 0.5);
             margin: 20px 0;
             border-radius: 10px;
             position: absolute;
-            top: 10%; /* Ajuste para deixar o texto um pouco mais para baixo */
+            top: 10%;
         }
 
-        /* Estilo da div dos botões */
         .button-container {
             position: absolute;
             bottom: 10%;
             left: 50%;
-            transform: translateX(-50%); /* Centraliza a div dos botões horizontalmente */
-            width: 90%; /* Ajusta o tamanho dos botões para não ultrapassar as bordas */
+            transform: translateX(-50%);
+            width: 90%;
             padding: 20px;
             display: flex;
             justify-content: center;
             gap: 20px;
         }
 
-        /* Estilo dos botões */
         .button-container button {
             background-color: #969292;
             color: white;
@@ -76,15 +72,13 @@
             width: auto;
         }
 
-        /* Efeito de hover nos botões */
         .button-container button:hover {
             background-color: #14171a;
         }
 
-        /* Media queries para responsividade */
         @media (max-width: 1024px) {
             .button-container {
-                width: 95%; /* Ajusta para telas menores */
+                width: 95%;
                 padding: 15px;
             }
 
@@ -106,14 +100,12 @@
             }
         }
 
-        /* Estilo do vídeo */
         #video {
             width: 100%;
             height: auto;
             display: none;
         }
 
-        /* Estilo para o spinner de carregamento */
         .loading {
             display: none;
             font-size: 24px;
@@ -121,7 +113,6 @@
             margin-top: 20px;
         }
 
-        /* Estilo para a mensagem de sucesso */
         .success-message {
             display: none;
             font-size: 18px;
@@ -134,19 +125,16 @@
 <body>
 
     <div class="background-container">
-        <!-- Texto de boas-vindas -->
         <div class="welcome-text">
             Bem-vindo! Deixe uma lembrança da festa para os noivos.
         </div>
 
         <div class="button-container">
-            <!-- Botão para Tirar Foto -->
             <button id="cameraButton">
                 <i class="fas fa-camera"></i> Tirar Foto
                 <input type="file" id="fileInputImage" accept="image/*" capture="camera" style="display:none" />
             </button>
 
-            <!-- Botão para Gravar Vídeo -->
             <button id="videoButton">
                 <i class="fas fa-video"></i> Gravar Vídeo
                 <input type="file" id="fileInputVideo" accept="video/*" capture="camera" style="display:none" />
@@ -155,28 +143,33 @@
 
         <video id="video" autoplay></video>
 
-        <!-- Spinner de carregamento -->
         <div id="loading" class="loading">
             Carregando... <i class="fas fa-spinner fa-spin"></i>
         </div>
 
-        <!-- Mensagem de sucesso -->
         <div id="successMessage" class="success-message">
             Envio realizado com sucesso! 🎉
         </div>
     </div>
 
     <script>
-        // Função para mostrar o loading e enviar o arquivo
         const loadingIndicator = document.getElementById('loading');
         const successMessage = document.getElementById('successMessage');
+        const cameraButton = document.getElementById('cameraButton');
+        const videoButton = document.getElementById('videoButton');
 
         const showLoading = () => {
             loadingIndicator.style.display = 'block';
+            // Desabilitar os botões
+            cameraButton.disabled = true;
+            videoButton.disabled = true;
         };
 
         const hideLoading = () => {
             loadingIndicator.style.display = 'none';
+            // Habilitar os botões
+            cameraButton.disabled = false;
+            videoButton.disabled = false;
         };
 
         const showSuccessMessage = () => {
@@ -186,7 +179,6 @@
             }, 3000);
         };
 
-        // Lidar com o evento de foto
         document.getElementById('fileInputImage').onchange = async (event) => {
             const file = event.target.files[0];
             if (!file) {
@@ -206,7 +198,7 @@
                 });
 
                 const result = await response.text();
-                console.log(result); // Aqui você pode lidar com a resposta
+                console.log(result); 
 
                 hideLoading();
                 showSuccessMessage();
@@ -218,7 +210,6 @@
             }
         };
 
-        // Lidar com o evento de vídeo
         document.getElementById('fileInputVideo').onchange = async (event) => {
             const file = event.target.files[0];
             if (!file) {
@@ -238,7 +229,7 @@
                 });
 
                 const result = await response.text();
-                console.log(result); // Aqui você pode lidar com a resposta
+                console.log(result); 
 
                 hideLoading();
                 showSuccessMessage();
@@ -250,12 +241,10 @@
             }
         };
 
-        // Função para abrir a câmera e tirar uma foto
         document.getElementById('cameraButton').onclick = () => {
             document.getElementById('fileInputImage').click();
         };
 
-        // Função para abrir a câmera e gravar um vídeo
         document.getElementById('videoButton').onclick = () => {
             document.getElementById('fileInputVideo').click();
         };
