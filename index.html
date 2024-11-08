@@ -16,6 +16,7 @@
             align-items: center;
             background-color: #f4f4f4;
             overflow: hidden;
+            flex-direction: column;
         }
 
         /* Estilo da div com a imagem de fundo */
@@ -27,6 +28,21 @@
             background-position: center center; /* A imagem vai ser centralizada */
             background-repeat: no-repeat; /* Impede a repetição da imagem */
             position: relative;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+
+        /* Estilo do texto de boas-vindas */
+        .welcome-text {
+            text-align: center;
+            font-size: 24px;
+            color: #fff;
+            font-weight: bold;
+            padding: 20px;
+            background-color: rgba(0, 0, 0, 0.5); /* Fundo semi-transparente */
+            margin: 20px 0;
+            border-radius: 10px;
         }
 
         /* Estilo da div dos botões */
@@ -93,11 +109,33 @@
             height: auto;
             display: none;
         }
+
+        /* Estilo para o spinner de carregamento */
+        .loading {
+            display: none;
+            font-size: 24px;
+            color: #3498db;
+            margin-top: 20px;
+        }
+
+        /* Estilo para a mensagem de sucesso */
+        .success-message {
+            display: none;
+            font-size: 18px;
+            color: green;
+            font-weight: bold;
+            margin-top: 20px;
+        }
     </style>
 </head>
 <body>
 
     <div class="background-container">
+        <!-- Texto de boas-vindas -->
+        <div class="welcome-text">
+            Bem-vindo! Deixe uma lembrança da festa para os noivos.
+        </div>
+
         <div class="button-container">
             <button id="cameraButton">
                 <i class="fas fa-camera"></i> Tirar Foto
@@ -107,8 +145,19 @@
                 <i class="fas fa-video"></i> Gravar Vídeo
             </button>
         </div>
+
         <video id="video" autoplay></video>
         <p id="responseMessage"></p>
+
+        <!-- Spinner de carregamento -->
+        <div id="loading" class="loading">
+            Carregando... <i class="fas fa-spinner fa-spin"></i>
+        </div>
+
+        <!-- Mensagem de sucesso -->
+        <div id="successMessage" class="success-message">
+            Envio realizado com sucesso! 🎉
+        </div>
     </div>
 
     <script>
@@ -120,7 +169,8 @@
         const videoButton = document.getElementById('videoButton');
         const cameraButton = document.getElementById('cameraButton');
         const fileInput = document.getElementById('fileInput');
-        const sendButton = document.getElementById('sendButton');
+        const loadingIndicator = document.getElementById('loading');
+        const successMessage = document.getElementById('successMessage');
         
         // Função para iniciar/terminar gravação de vídeo
         videoButton.onclick = async () => {
@@ -145,7 +195,7 @@
                         recordedChunks.push(event.data);
                     };
 
-                    // Quando a gravação for parada, disponibiliza o botão de enviar
+                    // Quando a gravação for parada, disponibiliza o vídeo gravado
                     mediaRecorder.onstop = () => {
                         const blob = new Blob(recordedChunks, { type: 'video/webm' });
                         const videoUrl = URL.createObjectURL(blob);
@@ -155,10 +205,6 @@
                         videoElement.src = videoUrl;
                         videoElement.controls = true;
                         videoElement.style.display = 'block';
-
-                        // Aqui você pode adicionar um botão ou lógica para enviar o vídeo ao servidor
-                        // Enviar vídeo (usando fetch)
-                        // uploadVideo(blob);
                     };
 
                     // Iniciar a gravação
@@ -176,6 +222,26 @@
             fileInput.click();
         };
 
+        // Função para mostrar o loading e enviar o arquivo
+        const showLoading = () => {
+            loadingIndicator.style.display = 'block';
+            videoButton.disabled = true; // Desabilitar o botão de vídeo enquanto o envio está em progresso
+            cameraButton.disabled = true; // Desabilitar o botão de foto enquanto o envio está em progresso
+        };
+
+        const hideLoading = () => {
+            loadingIndicator.style.display = 'none';
+            videoButton.disabled = false; // Reabilitar o botão de vídeo
+            cameraButton.disabled = false; // Reabilitar o botão de foto
+        };
+
+        const showSuccessMessage = () => {
+            successMessage.style.display = 'block';
+            setTimeout(() => {
+                successMessage.style.display = 'none'; // Esconde a mensagem após 3 segundos
+            }, 3000);
+        };
+
         fileInput.onchange = async (event) => {
             const file = event.target.files[0];
             if (!file) {
@@ -186,6 +252,9 @@
             const formData = new FormData();
             formData.append('file', file);
 
+            // Exibe o indicador de loading
+            showLoading();
+
             try {
                 const response = await fetch('/upload', {
                     method: 'POST',
@@ -194,28 +263,15 @@
 
                 const result = await response.text();
                 document.getElementById('responseMessage').innerText = result;
+
+                // Esconde o loading e exibe a mensagem de sucesso
+                hideLoading();
+                showSuccessMessage();
+
             } catch (error) {
                 console.error('Erro ao enviar o arquivo:', error);
                 document.getElementById('responseMessage').innerText = 'Erro ao enviar o arquivo.';
-            }
-        };
-
-        // Função de envio de vídeo para o servidor (opcional)
-        const uploadVideo = async (blob) => {
-            const formData = new FormData();
-            formData.append('video', blob, 'video.webm');
-
-            try {
-                const response = await fetch('/upload', {
-                    method: 'POST',
-                    body: formData
-                });
-
-                const result = await response.text();
-                document.getElementById('responseMessage').innerText = result;
-            } catch (error) {
-                console.error('Erro ao enviar o vídeo:', error);
-                document.getElementById('responseMessage').innerText = 'Erro ao enviar o vídeo.';
+                hideLoading();
             }
         };
 
